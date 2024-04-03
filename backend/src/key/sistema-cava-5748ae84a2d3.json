@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "sistema-cava",
+  "private_key_id": "5748ae84a2d3e9ed3647cf7ddbf0e8eb91c66d6d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDmkuy+expnAUE5\nUW3c122LcIi/EWgv/elyxhgq8kOiaqZIkvev3YH8xNt7Mz+xqhpAkgPfR95gkTrd\nFOATB9R2LOzPCQUVnEww1Ir0FkcQ1DZtSV3JCprtd2JWQSWMoOrFqkEFrAAiHI8D\nGKLwZrZqw3nIbXD3cC3DGa9iQhLt8PK2o8hO1/VcgqzdvbAw7LY0vdTDwBkcXC9T\n+QLw3SM5JnBHdpNWiXx1Yh6pZmN+znxv7gD5zRPYvs5Fl8jd4JgiXCYf5uf5SfF6\nRglivUeebEzvG0Y5BLQlXLKKhHmdPpZr+45oo9dIEQFnr7q/V5Z3jm0ATtingLKw\nhyl0rF4NAgMBAAECggEAH0WRD1qR36OHbZcyL9AV/uHx4fwh5dRpq5PbZkO6UZZm\nXBR2vGbuANLQM7rlKhr4eYZ0OP291toLoj15EIuw0KBSM9g01NQAb2T8PZOh6tHl\nWdgn/KLQFWHqN+mZBqQyg0GOlQ7Za8b0zIY0XyeHGR7O7xSMzDpuMnZS16A/gf64\nfN1gAxQEGiADl92Hmrf+iPZmeUVLRK3zfVoalccMTifikko9tLMhb1Q9dUhVlGk4\nMHPpP8mOXy8ePciGe0JfweyruayC9yfLoR1R2PnWVe6PCbReV/d74R0hl1wdmSeP\nEzRj485+y15gXJFqWpCFx1vdrh5n51mAqHnlzf3w/wKBgQD0z39zPynGCqZXTmcc\nVveMliD6sQGNUORuG+YVh+eM+J6T97yAH6nf8XMXI5kQMUx1m9y+OG0GWULE86HF\nPtSXnBcEkFtIX+gAivrzJyuIPIyjnO2Xwk/EPPrzzvaFQX2raaTKs/HGlXHkyKGJ\nxC/D7F/8os/v5SYNP4Kt520cywKBgQDxHNiH6UXrSYFF0tDluenWHI/+cbzRHsTk\n4XOSYxR9AHxRs0in415ywTQOx6mAJ1Zu3jPcErrfd3ayJ+6phdI2OvFB7GTS+c07\nZypmBKAnVSzkkm/OzEBiA/keWmMzRFkY5Xd3MItWyh5SAYw6V5Fl4UOisiPh1uu/\nLQ8wSGethwKBgF51XaDTI0Qlwc74EnLt33BgUPNJruae6rTNkPaHzMEpAM7pDNOG\n5B3jZNvtwVZtHypV7FN9JBwJ/uhNdQLNXmvtLzh0lrQTRUpIVdHSMErNyhorJ8Wh\nlPOL7+x408fQ4DNufMY1rjlIWnzDKQkmKKP5JYQuMftHOGpuMfb1z7UHAoGBAO4O\nLvOxq+jswAfyZ3IJpwhRVxI/tc868+ePeQ41aQsqKZR40OmCIcRnYUCefYocTMhV\n9xn4HC16w+SObKNPjwcgFwehoMJ1BN77su7a7k0nWZWrx1yEaaTci2AemgcKGnXs\nSZGSimB8WodZI9yOjO3sBV1jSO43xrcQhAiF1GeNAoGBAKFbhkFTFkExppI8OYUd\nFaZ+c8hQ47iDVxIWMzIj614/BgkPp72cMfc7ly21meN0pQiMjkKk9D+n4/rnh7q4\nUAOix4EqQZMkYH5IXnJ0n5YWKgVWE1Wx8CZ9RhH3nVPzdRwiyaE2m0xz+H/elaWx\nkn1xos2wKnMZkEhkY29brsZq\n-----END PRIVATE KEY-----\n",
+  "client_email": "cava-2024@sistema-cava.iam.gserviceaccount.com",
+  "client_id": "105177094725157140903",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cava-2024%40sistema-cava.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
