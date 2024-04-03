@@ -1,4 +1,5 @@
 /backend/node_modules
 /frontend/node_modules/
 .DS_Store
+backend/src/key/key.json
 backend/src/key/sistema-cava-5748ae84a2d3.json
