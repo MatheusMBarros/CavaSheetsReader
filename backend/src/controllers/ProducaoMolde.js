@@ -92,21 +92,21 @@ const piecesSplited = async (req , res) => {
     }
   });
   res.send({
+    "F24": f24,
     "P16am": p16am,
-    "P16af": p16af,
     "P18am": p18am,
-    "P18af": p18af,
     "P20am": p20am,
-    "P20af": p20af,
     "P22am": p22am,
-    "P22af": p22af,
     "P24am": p24am,
-    "P24af": p24af,
     "P28am": p28am,
-    "P28af": p28af,
     "P32am": p32am,
+    "P16af": p16af,
+    "P18af": p18af,
+    "P20af": p20af,
+    "P22af": p22af,
+    "P24af": p24af,
+    "P28af": p28af,
     "P32af": p32af,
-    "F24": f24
   });
 };
 
