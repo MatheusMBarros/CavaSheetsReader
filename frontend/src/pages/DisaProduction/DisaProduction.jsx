@@ -24,13 +24,16 @@ function DisaProduction() {
 
 	const handleGetData = async () => {
 		try {
-			const response = await axios.get(`http://localhost:4000/disa`, {
-				params: {
-					mes: month,
-					ano: year,
-					operador: operator,
-				},
-			});
+			const response = await axios.get(
+				`http://localhost:4000/producaoOperador`,
+				{
+					params: {
+						mes: month,
+						ano: year,
+						operador: operator,
+					},
+				}
+			);
 
 			setData(response.data);
 			setError(null);
@@ -230,7 +233,6 @@ function DisaProduction() {
 				</div>
 				<button onClick={handleGetData}>Buscar</button>
 
-				{/* <button onClick={handleDownloadPDF}>Baixar PDF</button> */}
 			</div>
 			{error && <p className="error">{error}</p>}
 			<div className="table-container">

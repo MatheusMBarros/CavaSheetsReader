@@ -10,10 +10,10 @@ function Home() {
 				<nav>
 					<ul>
 						<li>
-							<Link to="/disa">Produção Disa</Link>
+							<Link to="/producaoPorOperador">Produção Por Operador</Link>
 						</li>
 						<li>
-							<Link to="/contact">Contato</Link>
+							<Link to="/moldes">Produção por Molde</Link>
 						</li>
 					</ul>
 				</nav>

@@ -1,6 +1,6 @@
 
 const { lerPlanilha } = require('../reader');
-const {findMold} = require('../controllers/MoldesController')
+const {findMold} = require('./ProducaoMolde')
 
 const spreadsheetId = "1zcFd-8PKyAXtVwCPkqQYHgYKbWgF1LWFD31-Y1k-oDY";
 const sheetName = 'Disa';
@@ -23,16 +23,10 @@ const filterData = async (mes, ano, operador) => {
     }
 };
 
-const  getPecasPorMolde = async() => {
-    const resp = await filterData()
-     const molde = await findMold(resp[1][1])
-     return molde
 
-}
 
 const getData = async (req, res) => {
     const { mes, ano, operador } = req.query;
-
     try {
         const filteredData = await filterData(mes, ano, operador);
             res.json(filteredData)    
@@ -41,4 +35,4 @@ const getData = async (req, res) => {
     }
 };
 
-module.exports = { getData , getPecasPorMolde};
+module.exports = { getData };

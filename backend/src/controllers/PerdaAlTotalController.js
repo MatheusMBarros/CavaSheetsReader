@@ -6,16 +6,12 @@ const perdaAlTotal = async (req, res) => {
 
   const perdaAlMolde = async (req, res) => {
   
-    // ID da planilha
     const spreadsheetId = "1zcFd-8PKyAXtVwCPkqQYHgYKbWgF1LWFD31-Y1k-oDY";
   
-    // Nome da planilha
     const sheetName = 'cadastro moldes';
   
-    // Intervalo de células
     const range = 'A3:O18';
   
-    // Chame a função lerPlanilha com o spreadsheetId e o range
     const data = await lerPlanilha(spreadsheetId, sheetName, range);
   
   const pesoMolde = data.filter(item => item[0] === id);
@@ -55,7 +51,7 @@ const perdaAlTotal = async (req, res) => {
 
 const pesoPeca =  await perdaAlPeca(id)
 
-// const pesoTotal = (Number(perdaMolde) * 0.08) + (Number(pesoPeca) * 0.3)
+ const pesoTotal = (Number(perdaMolde) * 0.08) + (Number(pesoPeca) * 0.3)
 
 res.send(JSON.stringify("PerdaPeça: " + pesoPeca))
 
