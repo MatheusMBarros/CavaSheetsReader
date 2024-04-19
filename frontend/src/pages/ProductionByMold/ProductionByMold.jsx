@@ -3,27 +3,20 @@ import axios from "axios";
 
 function ProductionByMold() {
 	const [month, setMonth] = useState("");
-	const [year] = useState("");
-	const [operator, setOperator] = useState("");
-	const [data, setData] = useState([]);
+	const [data, setData] = useState({});
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
 		handleGetData();
-	}, [month, operator]);
+	}, [month]);
 
 	const handleGetData = async () => {
 		try {
-			const response = await axios.get(
-				`http://localhost:4000/producaoOperador`,
-				{
-					params: {
-						mes: month,
-						ano: year,
-						operador: operator,
-					},
-				}
-			);
+			const response = await axios.get(`http://localhost:4000/producaoMolde`, {
+				params: {
+					mes: month
+				},
+			});
 			setData(response.data);
 			setError(null);
 		} catch (error) {
@@ -40,11 +33,11 @@ function ProductionByMold() {
 			} else {
 				setError("Ocorreu um erro ao processar a solicitação.");
 			}
-			setData([]);
+			setData({});
 		}
 	};
 
-		
+	const sortedKeys = Object.keys(data).sort(); // Organiza as chaves em ordem alfabética
 
 	return (
 		<div className="container">
@@ -72,27 +65,20 @@ function ProductionByMold() {
 			<table>
 				<thead>
 					<tr>
-						<th>P16 AM</th>
-						<th>P16 AF</th>
-						<th>P18 AM</th>
-						<th>P18 AF</th>
-						<th>P20 AM</th>
-						<th>P20 AF</th>
-						<th>P22 AM</th>
-						<th>P22 AF</th>
-						<th>P24 AM</th>
-						<th>P24 AF</th>
-						<th>P28 AM</th>
-						<th>P28 AF</th>
-						<th>P32 AM</th>
-						<th>P32 AF</th>
-						<th>F24 AM</th>
+						{sortedKeys.map((key, index) => (
+							<th key={index}>{key}</th>
+						))}
 					</tr>
 				</thead>
 				<tbody>
-				
+					<tr>
+						{sortedKeys.map((key, index) => (
+							<td key={index}>{data[key]}</td>
+						))}
+					</tr>
 				</tbody>
 			</table>
+			{error && <div>{error}</div>}
 		</div>
 	);
 }
