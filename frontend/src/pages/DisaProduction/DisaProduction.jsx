@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./DisaProduction.css";
-import {
-	PDFDownloadLink,
-	PDFViewer,
-	Document,
-	Page,
-	Text,
-	View,
-	StyleSheet,
-} from "@react-pdf/renderer";
+import BackButton from "../../components/backButton"; // Import the BackButton component
 
 function DisaProduction() {
 	const [month, setMonth] = useState("");
@@ -94,13 +86,6 @@ function DisaProduction() {
 		return parseInt(pecasProduzidas);
 	};
 
-	const formatDate = (date) => {
-		const d = new Date(date);
-		return `${d.getFullYear()}-${(d.getMonth() + 1)
-			.toString()
-			.padStart(2, "0")}-${d.getDate().toString().padStart(2, "0")}`;
-	};
-
 	const calcularSomaTotal = () => {
 		let soma = 0;
 		data.forEach((item) => {
@@ -108,96 +93,10 @@ function DisaProduction() {
 		});
 		return soma;
 	};
-	const styles = StyleSheet.create({
-		// Estilos do PDF
-		page: {
-			flexDirection: "row",
-			backgroundColor: "#E4E4E4",
-		},
-		section: {
-			margin: 10,
-			padding: 10,
-			flexGrow: 1,
-		},
-	});
 
-	const handleDownloadPDF = () => {
-		// Criar um link temporário
-		const link = document.createElement("a");
-		link.href = URL.createObjectURL(
-			new Blob([<MyDocument />], { type: "application/pdf" })
-		);
-		link.download = `${operator}_${formatDate(new Date())}.pdf`;
-		document.body.appendChild(link);
-		// Clicar no link
-		link.click();
-		// Remover o link após o download
-		document.body.removeChild(link);
+	const handleBack = () => {
+		window.history.back();
 	};
-
-	const MyDocument = () => (
-		<Document>
-			<Page size="A4" style={styles.page}>
-				<View style={styles.section}>
-					<Text style={styles.header}>Produção por Operador e Data</Text>
-					<View style={styles.table}>
-						<View style={styles.tableRow}>
-							<View style={styles.tableCellHeader}>
-								<Text>Data</Text>
-							</View>
-							<View style={styles.tableCellHeader}>
-								<Text>Molde</Text>
-							</View>
-							<View style={styles.tableCellHeader}>
-								<Text>Operador</Text>
-							</View>
-							<View style={styles.tableCellHeader}>
-								<Text>Contador Inicial</Text>
-							</View>
-							<View style={styles.tableCellHeader}>
-								<Text>Contador Final</Text>
-							</View>
-							<View style={styles.tableCellHeader}>
-								<Text>Moldes Produzidos</Text>
-							</View>
-							<View style={styles.tableCellHeader}>
-								<Text>Peças</Text>
-							</View>
-						</View>
-						{data.map((item, index) => (
-							<View style={styles.tableRow} key={index}>
-								<View style={styles.tableCell}>
-									<Text>{item[0]}</Text>
-								</View>
-								<View style={styles.tableCell}>
-									<Text>{item[2]}</Text>
-								</View>
-								<View style={styles.tableCell}>
-									<Text>{item[4]}</Text>
-								</View>
-								<View style={styles.tableCell}>
-									<Text>{item[5]}</Text>
-								</View>
-								<View style={styles.tableCell}>
-									<Text>{item[6]}</Text>
-								</View>
-								<View style={styles.tableCell}>
-									<Text>{item[7]}</Text>
-								</View>
-								<View style={styles.tableCell}>
-									<Text>{pecasPorMolde(item[2], item[7])}</Text>
-								</View>
-							</View>
-						))}
-					</View>
-					<View style={styles.totalRow}>
-						<Text style={styles.totalLabel}>Soma Total:</Text>
-						<Text>{calcularSomaTotal()}</Text>
-					</View>
-				</View>
-			</Page>
-		</Document>
-	);
 
 	return (
 		<div className="container">
@@ -233,6 +132,7 @@ function DisaProduction() {
 				</div>
 				<button onClick={handleGetData}>Buscar</button>
 
+				<BackButton onClick={handleBack} />
 			</div>
 			{error && <p className="error">{error}</p>}
 			<div className="table-container">
