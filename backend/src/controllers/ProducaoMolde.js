@@ -62,7 +62,7 @@ const piecesSplited = async (req , res) => {
     if (item[1] == 3){
       p18am += Number(item[7].replace(".", "") * 4);
     } if (item[1] == 4){
-      p18af += Number(item[7].replace(".", "").replace(".", "") * 4);
+      p18af += Number(item[7].replace(".", "") * 4);
     } if (item[1] == 5){
       p20am += Number(item[7].replace(".", "") * 4);
     } if (item[1] == 6){
