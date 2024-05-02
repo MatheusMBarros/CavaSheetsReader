@@ -14,26 +14,62 @@ const cadastroMoldesConst = () => {
   return { spreadsheetId, sheetName, range };  
 };
 
-const filterDataByMonth = async (mes, ano) => {
+const filterDataByMonth = async (dataInicial, dataFinal) => {
   try {
-    const { spreadsheetId , sheetName, range } = disaConsts();
+    const { spreadsheetId, sheetName, range } = disaConsts()
     const data = await lerPlanilha(spreadsheetId, sheetName, range);
+
     const filteredData = data.filter(item => {
-      const [ diaPlanilha, mesPlanilha, anoPlanilha] = item[0].split('/');
-      const moldId = item[1];
-      return (!mes || mesPlanilha === mes) && (!ano || anoPlanilha === ano) && moldId;
+        if (!item[0]) return false; // Verifica se a primeira célula está vazia ou null
+
+        const [diaPlanilha, mesPlanilha, anoPlanilha] = item[0].split('/');
+        const moldId = item[1];
+        const dataItem = new Date(`${anoPlanilha}-${mesPlanilha.padStart(2, '0')}-${diaPlanilha.padStart(2, '0')}`);
+
+        // Converte as datas de entrada para objetos Date
+        const dataInicialObj = new Date(dataInicial);
+        const dataFinalObj = new Date(dataFinal);
+
+        return (!dataInicial || dataItem >= dataInicialObj) &&
+               (!dataFinal || dataItem <= dataFinalObj) 
     });
 
     return filteredData;
-  } catch (error) {
+} catch (error) {
     console.error('Erro ao filtrar os dados:', error);
     throw new Error("Erro ao filtrar os dados.");
-  }
+}
 };
 
+const moldProduction = async (req, res) => {
+  const { dataInicial, dataFinal } = req.query;
+  const data = await filterDataByMonth(dataInicial, dataFinal);
+
+  // Objeto para armazenar os valores de moldes produzidos agrupados
+  const moldProduction = {};
+
+  data.forEach((item) => {
+      const moldId = item[2];
+      const quantity = Number(item[7].replace(".", "")); // Valor produzido do molde
+
+      // Verifica se o moldId já está presente no objeto moldProduction
+      if (moldProduction[moldId]) {
+          moldProduction[moldId] += quantity;
+      } else {
+          moldProduction[moldId] = quantity;
+      }
+  });
+
+ 
+
+  res.send(moldProduction);
+};
+
+
+
 const piecesSplited = async (req , res) => {
-  const { mes , ano } = req.query;
-  const data = await filterDataByMonth(mes, ano);
+  const { dataInicial, dataFinal } = req.query;
+  const data = await filterDataByMonth(dataInicial, dataFinal);
   let p16am = 0; 
   let p16af = 0; 
   let p18am = 0; 
@@ -110,4 +146,4 @@ const piecesSplited = async (req , res) => {
   });
 };
 
-module.exports = { piecesSplited };
+module.exports = { piecesSplited,moldProduction };

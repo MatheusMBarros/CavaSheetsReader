@@ -7,7 +7,8 @@ const router = express.Router();
 
 router.get('/producaoOperador', ProducaoOperador.getData);
 router.get('/producaoMolde', ProducaoMolde.piecesSplited);
-router.get('/perdaAl/:id' , PerdaAlTotal.perdaAlTotal)
+router.get('/moldesProduzidos', ProducaoMolde.moldProduction);
+router.get('/perdaAl' , PerdaAlTotal.aluminiumLost)
 
 module.exports = router;
 

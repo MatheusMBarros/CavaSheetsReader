@@ -1,23 +1,45 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "./ProductionByMoldStyle.css";
+import BackButton from "../../components/backButton"; // Import the BackButton component
 
 function ProductionByMold() {
 	const [month, setMonth] = useState("");
-	const [data, setData] = useState({});
+	const [startDate, setStartDate] = useState("");
+	const [endDate, setEndDate] = useState("");
+	const [productionData, setProductionData] = useState({});
+	const [moldProductionData, setMoldProductionData] = useState({});
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
 		handleGetData();
-	}, [month]);
+	}, [month, startDate, endDate]);
 
 	const handleGetData = async () => {
 		try {
-			const response = await axios.get(`http://localhost:4000/producaoMolde`, {
-				params: {
-					mes: month
-				},
-			});
-			setData(response.data);
+			const productionResponse = await axios.get(
+				`http://localhost:4000/producaoMolde`,
+				{
+					params: {
+						mes: month,
+						dataInicial: startDate,
+						dataFinal: endDate,
+					},
+				}
+			);
+
+			const moldProductionResponse = await axios.get(
+				`http://localhost:4000/moldesProduzidos`,
+				{
+					params: {
+						dataInicial: startDate,
+						dataFinal: endDate,
+					},
+				}
+			);
+
+			setProductionData(productionResponse.data);
+			setMoldProductionData(moldProductionResponse.data);
 			setError(null);
 		} catch (error) {
 			if (error.response && error.response.status === 429) {
@@ -33,52 +55,83 @@ function ProductionByMold() {
 			} else {
 				setError("Ocorreu um erro ao processar a solicitação.");
 			}
-			setData({});
+			setProductionData({});
+			setMoldProductionData({});
 		}
 	};
 
-	const sortedKeys = Object.keys(data).sort(); // Organiza as chaves em ordem alfabética
+	const sortedKeys = Object.keys(productionData)
+		.filter((key) => productionData[key] !== 0)
+		.sort(); // Organiza as chaves em ordem alfabética
 
+	const handleBack = () => {
+		window.history.back();
+	};
 	return (
 		<div className="container">
-			<h2>Produção por Molde</h2>
-			<div className="filters">
-				<div className="filter">
-					<label>Mês:</label>
-					<select value={month} onChange={(e) => setMonth(e.target.value)}>
-						<option value="">Selecione o mês</option>
-						<option value="01">Janeiro</option>
-						<option value="02">Fevereiro</option>
-						<option value="03">Março</option>
-						<option value="04">Abril</option>
-						<option value="05">Maio</option>
-						<option value="06">Junho</option>
-						<option value="07">Julho</option>
-						<option value="08">Agosto</option>
-						<option value="09">Setembro</option>
-						<option value="10">Outubro</option>
-						<option value="11">Novembro</option>
-						<option value="12">Dezembro</option>
-					</select>
+			<div className="production-table">
+				<h2>Produção por Molde</h2>
+				<div className="filters">
+					<div className="filter">
+						<label>Data Inicial:</label>
+						<input
+							type="date"
+							value={startDate}
+							onChange={(e) => setStartDate(e.target.value)}
+						/>
+					</div>
+					<div className="filter">
+						<label>Data Final:</label>
+						<input
+							type="date"
+							value={endDate}
+							onChange={(e) => setEndDate(e.target.value)}
+						/>
+					</div>
+					<BackButton onClick={handleBack} />
 				</div>
+				<table>
+					<thead>
+						<tr>
+							{sortedKeys.map((key, index) => (
+								<th key={index}>{key}</th>
+							))}
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							{sortedKeys.map((key, index) => (
+								<td key={index}>{productionData[key]}</td>
+							))}
+						</tr>
+					</tbody>
+				</table>
+
+				{error && <div>{error}</div>}
 			</div>
-			<table>
-				<thead>
-					<tr>
-						{sortedKeys.map((key, index) => (
-							<th key={index}>{key}</th>
-						))}
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						{sortedKeys.map((key, index) => (
-							<td key={index}>{data[key]}</td>
-						))}
-					</tr>
-				</tbody>
-			</table>
-			{error && <div>{error}</div>}
+
+			<div className="mold-production-table">
+				<table>
+					<thead>
+						<tr>
+							{Object.entries(moldProductionData)
+								.sort(([moldA], [moldB]) => moldA.localeCompare(moldB))
+								.map(([mold, quantity]) => (
+									<th key={mold}>{mold}</th>
+								))}
+						</tr>
+					</thead>
+					<tbody>
+						{Object.entries(moldProductionData)
+							.sort(([moldA], [moldB]) => moldA.localeCompare(moldB))
+							.map(([mold, quantity]) => (
+								<td key={mold}>
+									<tr>{quantity}</tr>
+								</td>
+							))}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	);
 }
