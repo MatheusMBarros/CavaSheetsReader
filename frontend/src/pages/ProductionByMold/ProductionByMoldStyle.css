@@ -1,12 +1,13 @@
-.container {
+*{
+  padding: 10px;
+}
+
+.container-moldes {
+  margin-top: 1000px;
   margin: 0 auto;
   font-family: Arial, sans-serif;
 }
 
-h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
 
 .filters {
   display: flex;

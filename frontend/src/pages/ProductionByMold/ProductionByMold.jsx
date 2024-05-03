@@ -9,6 +9,7 @@ function ProductionByMold() {
 	const [endDate, setEndDate] = useState("");
 	const [productionData, setProductionData] = useState({});
 	const [moldProductionData, setMoldProductionData] = useState({});
+	const [aluminiumLostData, setAluminiumLostData] = useState({});
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
@@ -37,9 +38,11 @@ function ProductionByMold() {
 					},
 				}
 			);
+			const aluminiumLost = await axios.get(`http://localhost:4000/perdaAl`);
 
 			setProductionData(productionResponse.data);
 			setMoldProductionData(moldProductionResponse.data);
+			setAluminiumLostData(aluminiumLost.data);
 			setError(null);
 		} catch (error) {
 			if (error.response && error.response.status === 429) {
@@ -67,10 +70,10 @@ function ProductionByMold() {
 	const handleBack = () => {
 		window.history.back();
 	};
+
 	return (
-		<div className="container">
+		<div className="container-moldes">
 			<div className="production-table">
-				<h2>Produção por Molde</h2>
 				<div className="filters">
 					<div className="filter">
 						<label>Data Inicial:</label>
@@ -90,6 +93,7 @@ function ProductionByMold() {
 					</div>
 					<BackButton onClick={handleBack} />
 				</div>
+				<h2>Produção por Peça</h2>
 				<table>
 					<thead>
 						<tr>
@@ -111,6 +115,7 @@ function ProductionByMold() {
 			</div>
 
 			<div className="mold-production-table">
+				<h2>Produção por Molde</h2>
 				<table>
 					<thead>
 						<tr>
@@ -125,10 +130,43 @@ function ProductionByMold() {
 						{Object.entries(moldProductionData)
 							.sort(([moldA], [moldB]) => moldA.localeCompare(moldB))
 							.map(([mold, quantity]) => (
-								<td key={mold}>
-									<tr>{quantity}</tr>
-								</td>
+								<td key={mold}>{quantity}</td>
 							))}
+					</tbody>
+				</table>
+			</div>
+			<div className="al-lost-table">
+				<h2>Alumíno perdido</h2>
+				<table>
+					<thead>
+						<tr>
+							{Object.entries(aluminiumLostData)
+								.sort(([moldA], [moldB]) => moldA.localeCompare(moldB))
+								.filter(
+									([mold, quantity]) =>
+										quantity * moldProductionData[mold] !== 0 &&
+										!isNaN(quantity * moldProductionData[mold])
+								)
+								.map(([mold, quantity]) => (
+									<th key={mold}>{mold}</th>
+								))}
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							{Object.entries(aluminiumLostData)
+								.sort(([moldA], [moldB]) => moldA.localeCompare(moldB))
+								.filter(
+									([mold, quantity]) =>
+										quantity * moldProductionData[mold] !== 0 &&
+										!isNaN(quantity * moldProductionData[mold])
+								)
+								.map(([mold, quantity]) => (
+									<td key={mold}>
+										{(quantity * moldProductionData[mold]).toFixed(3)} Kg
+									</td>
+								))}
+						</tr>
 					</tbody>
 				</table>
 			</div>
