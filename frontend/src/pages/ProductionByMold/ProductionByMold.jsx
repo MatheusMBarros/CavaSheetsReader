@@ -108,6 +108,15 @@ function ProductionByMold() {
 								<td key={index}>{productionData[key]}</td>
 							))}
 						</tr>
+						<tr>
+							<td colSpan={sortedKeys.length}>
+								Total:{" "}
+								{Object.values(productionData).reduce(
+									(acc, cur) => acc + cur,
+									0
+								)}
+							</td>
+						</tr>
 					</tbody>
 				</table>
 
@@ -132,6 +141,15 @@ function ProductionByMold() {
 							.map(([mold, quantity]) => (
 								<td key={mold}>{quantity}</td>
 							))}
+						<tr>
+							<td colSpan={Object.keys(moldProductionData).length}>
+								Total:{" "}
+								{Object.values(moldProductionData).reduce(
+									(acc, cur) => acc + cur,
+									0
+								)}
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -166,6 +184,26 @@ function ProductionByMold() {
 										{(quantity * moldProductionData[mold]).toFixed(3)} Kg
 									</td>
 								))}
+						</tr>
+						<tr>
+							<td colSpan={Object.keys(aluminiumLostData).length}>
+								Total:{" "}
+								{Object.entries(aluminiumLostData)
+									.sort(([moldA], [moldB]) => moldA.localeCompare(moldB))
+									.filter(
+										([mold, quantity]) =>
+											quantity * moldProductionData[mold] !== 0 &&
+											!isNaN(quantity * moldProductionData[mold])
+									)
+									.reduce(
+										(acc, [mold, quantity]) =>
+											acc + (quantity * moldProductionData[mold] || 0),
+										0
+									)
+									.toFixed(3)
+									.toLocaleString("pt-BR")}{" "}
+								Kg
+							</td>
 						</tr>
 					</tbody>
 				</table>
