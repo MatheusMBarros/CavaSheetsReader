@@ -1,28 +1,19 @@
 const { lerPlanilha } = require('../reader');
+const {MoldeInfos} = require ("../consts/SheetsConsts")
 
-const variaveisConsts = () => {
-  const spreadsheetId = "1zcFd-8PKyAXtVwCPkqQYHgYKbWgF1LWFD31-Y1k-oDY";
-  const sheetName = 'Variaveis';
-  const range = 'B2:E23';
-  return {
-    spreadsheetId,
-    sheetName,
-    range,
-  };
-}
 
 const aluminiumLost = async (req, res) => {
-  const { spreadsheetId, sheetName, range } = variaveisConsts();
+  const { moldeSpreadsheetId, moldSheetName, moldRange } = MoldeInfos;
 
   try {
-    const data = await lerPlanilha(spreadsheetId, sheetName, range);
+    const data = await lerPlanilha(moldeSpreadsheetId, moldSheetName, moldRange);
     let perdaTotalPorMolde = {};
 
     data.forEach((item) => {
       const codigoMolde = item[0];
       const nomeMolde = item[1];
       if (codigoMolde !== "Cod") {
-        const perdaTotal = Number(item[3].replace(",", ".")); 
+        const perdaTotal = Number(item[7].replace(",", ".")); 
         perdaTotalPorMolde[nomeMolde] = perdaTotal;
       }
     });

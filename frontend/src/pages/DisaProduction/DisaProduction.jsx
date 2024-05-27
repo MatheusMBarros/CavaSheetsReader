@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./DisaProduction.css";
 import BackButton from "../../components/backButton"; // Import the BackButton component
 
 function DisaProduction() {
@@ -9,25 +8,30 @@ function DisaProduction() {
 	const [operator, setOperator] = useState("");
 	const [data, setData] = useState([]);
 	const [error, setError] = useState(null);
-	const [mold, setMold] = useState(""); // New state for mold filter
+	const [moldFilter, setMoldFilter] = useState(""); // New state for mold filter
+	const [moldQuantities, setMoldQuantities] = useState({});
 
 	useEffect(() => {
 		handleGetData();
-	}, [startDate, endDate, operator, mold]); // Trigger the effect whenever the filters change
+	}, [startDate, endDate, operator, moldFilter]); // Trigger the effect whenever the filters change
 
 	const handleGetData = async () => {
 		try {
-			const response = await axios.get(
-				`http://localhost:4000/producaoOperador`,
-				{
-					params: {
-						dataInicial: startDate,
-						dataFinal: endDate,
-						operador: operator,
-						molde: mold,
-					},
-				}
-			);
+			const response = await axios.get(`http://localhost:4000/disaData`, {
+				params: {
+					dataInicial: startDate,
+					dataFinal: endDate,
+					operador: operator,
+					molde: moldFilter,
+				},
+			});
+
+			const moldData = await axios.get(`http://localhost:4000/mold`);
+			const moldQuantities = moldData.data.reduce((acc, mold) => {
+				acc[mold[0]] = parseNumber(mold[2]);
+				return acc;
+			}, {});
+			setMoldQuantities(moldQuantities);
 
 			setData(response.data);
 			setError(null);
@@ -49,62 +53,31 @@ function DisaProduction() {
 		}
 	};
 
-	const somaMoldes = () => {
-		let sum = 0;
-		data.forEach((item) => (sum += parseInt(item[11])));
-		return sum;
-	};
-
-	const pecasPorMolde = (molde, moldesProduzidos) => {
-		let pecasProduzidas = 0;
-		data.forEach((item) => {
-			if (item[2] === molde) {
-				moldesProduzidos = moldesProduzidos.replace(".", "");
-
-				if (
-					item[1] == 1 ||
-					item[1] == 2 ||
-					item[1] == 3 ||
-					item[1] == 4 ||
-					item[1] == 5
-				) {
-					pecasProduzidas = parseFloat(moldesProduzidos * 4);
-				}
-				if (
-					item[1] == 6 ||
-					item[1] == 7 ||
-					item[1] == 9 ||
-					item[1] == 11 ||
-					item[1] == 12
-				) {
-					pecasProduzidas = parseFloat(moldesProduzidos * 3);
-				}
-				if (item[1] == 8 || item[1] == 10 || item[1] == 15) {
-					pecasProduzidas = parseFloat(moldesProduzidos * 2);
-				}
-				if (item[1] == 13 || item[1] == 14) {
-					pecasProduzidas = parseFloat(moldesProduzidos);
-				}
-			}
-		});
-		pecasProduzidas = parseFloat(
-			pecasProduzidas.toString().replace(/\b\.0\b/, "")
-		);
-
-		return parseInt(pecasProduzidas);
-	};
-
-	const calcularSomaTotal = () => {
-		let soma = 0;
-		data.forEach((item) => {
-			soma += pecasPorMolde(item[2], item[7]);
-		});
-		return soma;
-	};
-
 	const handleBack = () => {
 		window.history.back();
 	};
+
+	const parseNumber = (value) => {
+		return Number(value.replace(/\D/g, "")) || 0;
+	};
+
+	const getMoldQuantity = (moldId) => {
+		return moldQuantities[moldId] || 0;
+	};
+
+	const calculateTotalMolds = (items) => {
+		return items.reduce((acc, item) => acc + parseNumber(item[7]), 0);
+	};
+
+	const calculateTotalPieces = (items) => {
+		return items.reduce(
+			(acc, item) => acc + getMoldQuantity(item[1]) * parseNumber(item[7]),
+			0
+		);
+	};
+
+	const totalMolds = calculateTotalMolds(data);
+	const totalPieces = calculateTotalPieces(data);
 
 	return (
 		<div className="container">
@@ -137,9 +110,10 @@ function DisaProduction() {
 					</select>
 				</div>
 				<div className="filter">
-					{" "}
 					<label>Molde:</label>
-					<select value={mold} onChange={(e) => setMold(e.target.value)}>
+					<select
+						value={moldFilter}
+						onChange={(e) => setMoldFilter(e.target.value)}>
 						<option value="">Selecione o molde</option>
 						<option value="1">Molde P16 AM</option>
 						<option value="2">Molde P16 AF</option>
@@ -180,15 +154,17 @@ function DisaProduction() {
 					</thead>
 					<tbody>
 						{data.map((item, index) => {
+							const moldId = item[1];
+							const pieces = getMoldQuantity(moldId) * parseNumber(item[7]);
 							return (
 								<tr key={index}>
 									<td>{item[0]}</td>
 									<td>{item[2]}</td>
 									<td>{item[4]}</td>
-									<td>{item[5]}</td>
-									<td>{item[6]}</td>
-									<td>{item[7]}</td>
-									<td>{pecasPorMolde(item[2], item[7])}</td>
+									<td>{parseNumber(item[5])}</td>
+									<td>{parseNumber(item[6])}</td>
+									<td>{parseNumber(item[7])}</td>
+									<td>{pieces}</td>
 								</tr>
 							);
 						})}
@@ -196,13 +172,13 @@ function DisaProduction() {
 							<td colSpan="6" style={{ textAlign: "right" }}>
 								Soma Peças:
 							</td>
-							<td>{calcularSomaTotal()}</td>
+							<td>{totalPieces}</td>
 						</tr>
 						<tr>
 							<td colSpan="6" style={{ textAlign: "right" }}>
 								Soma Moldes:
 							</td>
-							<td>{somaMoldes()}</td>
+							<td>{totalMolds}</td>
 						</tr>
 					</tbody>
 				</table>

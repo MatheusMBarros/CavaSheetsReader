@@ -14,25 +14,13 @@ async function getAuthSheets(){
     auth: client
   })
 
-  const spreadsheetId = "1zcFd-8PKyAXtVwCPkqQYHgYKbWgF1LWFD31-Y1k-oDY"
-
   return {
     auth, 
     client , 
-    googleSheets,
-    spreadsheetId
+    googleSheets
   }
 }
 
-async function metadata(require, response){
-  const { googleSheets , auth , spreadsheetId } = await getAuthSheets();
-  const data = await googleSheets.spreadsheets.get({
-    auth,
-    spreadsheetId
-  })
-   response.end(JSON.stringify(data.data))
-
-}
 
 async function lerPlanilha(spreadsheetId, sheetName, range) {
   const { googleSheets, auth } = await getAuthSheets();
@@ -47,10 +35,9 @@ async function lerPlanilha(spreadsheetId, sheetName, range) {
   // Extrair os valores da resposta
   const rows = response.data.values;
 
-
-return rows
+  return rows
 
 }
 
 
-module.exports = { lerPlanilha, metadata };
+module.exports = { lerPlanilha };
