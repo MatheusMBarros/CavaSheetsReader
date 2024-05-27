@@ -1,14 +1,17 @@
 const express = require('express');
-const ProducaoOperador = require("./controllers/ProducaoOperador.js")
-const ProducaoMolde = require("./controllers/ProducaoMolde.js");
-const PerdaAlTotal = require('./controllers/PerdaAlTotal.js');
+const DisaProductionController = require("./controllers/DisaProductionController.js")
+const MoldProductionController = require("./controllers/MoldProductionController.js");
+const AuluminumLostController = require('./controllers/AuluminumLostController.js');
+const PieceProductionController = require("./controllers/PieceProductionController.js");
 
 const router = express.Router();
+router.get('/disaData', DisaProductionController.getData)
+router.get('/mold', DisaProductionController.getMold);
+router.get('/pieces', MoldProductionController.piecesSplited);
+router.get('/moldesProduzidos', MoldProductionController.moldProduction);
+router.get('/pieceProduction', PieceProductionController.getPieceProduction); // Nova rota para produção por peça
 
-router.get('/producaoOperador', ProducaoOperador.getData);
-router.get('/producaoMolde', ProducaoMolde.piecesSplited);
-router.get('/moldesProduzidos', ProducaoMolde.moldProduction);
-router.get('/perdaAl' , PerdaAlTotal.aluminiumLost)
+router.get('/perdaAl' , AuluminumLostController.aluminiumLost)
 
 module.exports = router;
 

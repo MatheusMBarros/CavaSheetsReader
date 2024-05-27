@@ -1,15 +1,10 @@
-
-const { lerPlanilha } = require('../reader');
-const {findMold} = require('./ProducaoMolde')
-
-const spreadsheetId = "1zcFd-8PKyAXtVwCPkqQYHgYKbWgF1LWFD31-Y1k-oDY";
-const sheetName = 'Disa';
-const range = 'A7:AT1000';
+const { DisaConsts } = require('./consts/SheetsConsts');
+const { lerPlanilha } = require('./reader');
 
 const filterData = async (dataInicial, dataFinal, operador, molde) => {
     try {
+        const { spreadsheetId, sheetName, range } = DisaConsts;
         const data = await lerPlanilha(spreadsheetId, sheetName, range);
-
         const filteredData = data.filter(item => {
             if (!item[0]) return false; // Verifica se a primeira célula está vazia ou null
 
@@ -34,16 +29,4 @@ const filterData = async (dataInicial, dataFinal, operador, molde) => {
     }
 };
 
-
-const getData = async (req, res) => {
-    const { dataInicial, dataFinal, operador, molde } = req.query;
-    try {
-        const filteredData = await filterData(dataInicial, dataFinal, operador, molde);
-        res.json(filteredData);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-module.exports = { getData };
-
+module.exports = { filterData };
