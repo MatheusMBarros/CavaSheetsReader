@@ -6,14 +6,14 @@ const DisaConsts = {
 
 const MoldeInfos = {
   moldeSpreadsheetId: "1zcFd-8PKyAXtVwCPkqQYHgYKbWgF1LWFD31-Y1k-oDY",
-  moldSheetName: 'Teste',
-  moldRange: 'B4:I35'
+  moldSheetName: 'Moldes',
+  moldRange: 'B4:AU80'
 };
 
 const PecasInfo = {
   piecesShpreadshetId: "1zcFd-8PKyAXtVwCPkqQYHgYKbWgF1LWFD31-Y1k-oDY",
-  pieceSheetName: 'Teste',
-  pieceRange: 'P4:Q35'
+  pieceSheetName: 'Moldes',
+  pieceRange: 'AW4:BC80'
 };
 
 module.exports = { DisaConsts, MoldeInfos, PecasInfo};

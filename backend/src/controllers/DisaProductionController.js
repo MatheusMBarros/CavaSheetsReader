@@ -12,11 +12,18 @@ const getPiecesPerMold = async (req, res) => {
 
         const moldMap = moldData.reduce((acc, mold) => {
             const moldId = mold[0];
-            const piecesId = mold.slice(3, 7).filter(pieceId => pieceId);
+            if (!moldId) return acc; // Skip if moldId is null or undefined
+            
+            const piecesId = [];
+            for (let i = 3; i < 43; i += 2) { // Adjusted to process 20 odd positions starting from index 3
+                if (mold[i]) {
+                    piecesId.push(mold[i]);
+                }
+            }
             acc[moldId] = piecesId;
             return acc;
         }, {});
-
+        
         const filteredData = await filterData(dataInicial, dataFinal, operador, molde);
 
         const piecesCount = filteredData.reduce((acc, item) => {
