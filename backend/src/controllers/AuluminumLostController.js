@@ -13,10 +13,11 @@ const aluminiumLost = async (req, res) => {
       const codigoMolde = item[0];
       const nomeMolde = item[1];
       if (codigoMolde !== "Cod") {
-        const perdaTotal = Number(item[7].replace(",", ".")); 
+        const perdaTotal = Number(item[43].replace(",", ".")); 
         perdaTotalPorMolde[nomeMolde] = perdaTotal;
       }
     });
+    console.log(data[4][43]);
 
     // Organiza os dados por ordem alfabética do nome do molde
     const perdaTotalPorMoldeOrdenada = Object.fromEntries(
