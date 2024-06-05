@@ -17,8 +17,6 @@ const aluminiumLost = async (req, res) => {
         perdaTotalPorMolde[nomeMolde] = perdaTotal;
       }
     });
-    console.log(data[4][43]);
-
     // Organiza os dados por ordem alfabética do nome do molde
     const perdaTotalPorMoldeOrdenada = Object.fromEntries(
       Object.entries(perdaTotalPorMolde).sort(([moldeA], [moldeB]) => moldeA.localeCompare(moldeB))

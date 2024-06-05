@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Caminho completo para o diretório do seu projeto
+PROJ_DIR="/users/barros/testeProducao/CavaSheetsReader/"
+
+# Atualizar repositório com a branch main
+cd $PROJ_DIR
+git fetch origin main
+git checkout main
+git pull origin main
+
+# Navegar para o diretório "frontend" e executar o comando npm install para instalar as dependências
+cd $PROJ_DIR/frontend
+npm install
+
+# Iniciar o servidor React em segundo plano
+npm run start &
+
+# Voltar para o diretório raiz do projeto
+cd $PROJ_DIR
+
+# Navegar para o diretório "backend" e executar o comando npm install para instalar as dependências
+cd $PROJ_DIR/backend
+npm install
+
+# Iniciar o servidor Node.js com o comando node
+node --watch src/index.js
