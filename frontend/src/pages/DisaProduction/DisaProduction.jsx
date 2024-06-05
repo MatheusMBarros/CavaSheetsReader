@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import BackButton from "../../components/backButton"; // Import the BackButton component
+import BackButton from "../../components/backButton";
 
 function DisaProduction() {
-	const [startDate, setStartDate] = useState(""); // State for start date
-	const [endDate, setEndDate] = useState(""); // State for end date
+	const [startDate, setStartDate] = useState("");
+	const [endDate, setEndDate] = useState("");
 	const [operator, setOperator] = useState("");
 	const [data, setData] = useState([]);
 	const [error, setError] = useState(null);
-	const [moldFilter, setMoldFilter] = useState(""); // New state for mold filter
+	const [moldOptions, setMoldOptions] = useState([]); // State to hold mold options
+	const [moldFilter, setMoldFilter] = useState("");
 	const [moldQuantities, setMoldQuantities] = useState({});
 
 	useEffect(() => {
 		handleGetData();
-	}, [startDate, endDate, operator, moldFilter]); // Trigger the effect whenever the filters change
+	}, [startDate, endDate, operator, moldFilter]);
 
 	const handleGetData = async () => {
 		try {
@@ -27,6 +28,12 @@ function DisaProduction() {
 			});
 
 			const moldData = await axios.get(`http://localhost:4000/mold`);
+			const moldOptions = moldData.data.map((mold) => ({
+				value: mold[0],
+				label: mold[1],
+			}));
+			setMoldOptions(moldOptions);
+
 			const moldQuantities = moldData.data.reduce((acc, mold) => {
 				acc[mold[0]] = parseNumber(mold[2]);
 				return acc;
@@ -115,31 +122,19 @@ function DisaProduction() {
 						value={moldFilter}
 						onChange={(e) => setMoldFilter(e.target.value)}>
 						<option value="">Selecione o molde</option>
-						<option value="1">Molde P16 AM</option>
-						<option value="2">Molde P16 AF</option>
-						<option value="3">Molde P18 AM</option>
-						<option value="4">Molde P18 AF</option>
-						<option value="5">Molde P20 AM</option>
-						<option value="6">Molde P20 AF</option>
-						<option value="7">Molde P22 AM</option>
-						<option value="8">Molde P22 AF</option>
-						<option value="9">Molde P24 AM</option>
-						<option value="10">Molde P24 AF</option>
-						<option value="11">Molde P28 AM</option>
-						<option value="12">Molde P28 AF</option>
-						<option value="13">Molde P32 AM</option>
-						<option value="14">Molde P32 AF</option>
-						<option value="15">Molde F24</option>
+						{moldOptions.map((option) => (
+							<option key={option.value} value={option.value}>
+								{option.label}
+							</option>
+						))}
 					</select>
 				</div>
 				<button onClick={handleGetData}>Buscar</button>
-
 				<BackButton onClick={handleBack} />
 			</div>
 			{error && <p className="error">{error}</p>}
 			<div className="table-container">
 				<h3>Dados de Produção:</h3>
-
 				<table>
 					<thead>
 						<tr>
