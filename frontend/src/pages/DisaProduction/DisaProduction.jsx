@@ -1,29 +1,44 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import BackButton from "../../components/backButton";
+import BackButton from "../../components/BackButton";
 
 function DisaProduction() {
 	const [startDate, setStartDate] = useState("");
 	const [endDate, setEndDate] = useState("");
 	const [operator, setOperator] = useState("");
+	const [filterStartDate, setFilterStartDate] = useState("");
+	const [filterEndDate, setFilterEndDate] = useState("");
+	const [filterOperator, setFilterOperator] = useState("");
+	const [moldFilter, setMoldFilter] = useState("");
+	const [filterMoldFilter, setFilterMoldFilter] = useState("");
 	const [data, setData] = useState([]);
 	const [error, setError] = useState(null);
-	const [moldOptions, setMoldOptions] = useState([]); // State to hold mold options
-	const [moldFilter, setMoldFilter] = useState("");
+	const [moldOptions, setMoldOptions] = useState([]);
 	const [moldQuantities, setMoldQuantities] = useState({});
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		handleGetData();
-	}, [startDate, endDate, operator, moldFilter]);
+		// Define datas iniciais e finais
+		const today = new Date();
+		const currentYear = today.getFullYear();
+		const initialDate = `${currentYear}-01-01`;
+		const finalDate = today.toISOString().split("T")[0];
+
+		setStartDate(initialDate);
+		setEndDate(finalDate);
+		setFilterStartDate(initialDate);
+		setFilterEndDate(finalDate);
+	}, []);
 
 	const handleGetData = async () => {
+		setLoading(true);
 		try {
 			const response = await axios.get(`http://localhost:4000/disaData`, {
 				params: {
-					dataInicial: startDate,
-					dataFinal: endDate,
-					operador: operator,
-					molde: moldFilter,
+					dataInicial: filterStartDate,
+					dataFinal: filterEndDate,
+					operador: filterOperator,
+					molde: filterMoldFilter,
 				},
 			});
 
@@ -58,6 +73,14 @@ function DisaProduction() {
 			}
 			setData([]);
 		}
+		setLoading(false);
+	};
+
+	const handleFilter = () => {
+		setFilterStartDate(startDate);
+		setFilterEndDate(endDate);
+		setFilterOperator(operator);
+		setFilterMoldFilter(moldFilter);
 	};
 
 	const handleBack = () => {
@@ -85,6 +108,12 @@ function DisaProduction() {
 
 	const totalMolds = calculateTotalMolds(data);
 	const totalPieces = calculateTotalPieces(data);
+
+	useEffect(() => {
+		if (filterStartDate && filterEndDate) {
+			handleGetData();
+		}
+	}, [filterStartDate, filterEndDate, filterOperator, filterMoldFilter]);
 
 	return (
 		<div className="container">
@@ -129,57 +158,62 @@ function DisaProduction() {
 						))}
 					</select>
 				</div>
-				<button onClick={handleGetData}>Buscar</button>
+				<button onClick={handleFilter}>Buscar</button>
 				<BackButton onClick={handleBack} />
 			</div>
-			{error && <p className="error">{error}</p>}
-			<div className="table-container">
-				<h3>Dados de Produção:</h3>
-				<table>
-					<thead>
-						<tr>
-							<th>Data</th>
-							<th>Molde</th>
-							<th>Operador</th>
-							<th>Contador inicial</th>
-							<th>Contador Final</th>
-							<th>Moldes Produzidos</th>
-							<th>Peças</th>
-						</tr>
-					</thead>
-					<tbody>
-						{data.map((item, index) => {
-							const moldId = item[1];
-							const pieces = getMoldQuantity(moldId) * parseNumber(item[7]);
-							return (
-								<tr key={index}>
-									<td>{item[0]}</td>
-									<td>{item[2]}</td>
-									<td>{item[4]}</td>
-									<td>{parseNumber(item[5])}</td>
-									<td>{parseNumber(item[6])}</td>
-									<td>{parseNumber(item[7])}</td>
-									<td>{pieces}</td>
+			{loading ? (
+				<p>Carregando dados...</p>
+			) : (
+				<>
+					{error && <p className="error">{error}</p>}
+					<div className="table-container">
+						<h3>Dados de Produção:</h3>
+						<table>
+							<thead>
+								<tr>
+									<th>Data</th>
+									<th>Molde</th>
+									<th>Operador</th>
+									<th>Contador inicial</th>
+									<th>Contador Final</th>
+									<th>Moldes Produzidos</th>
+									<th>Peças</th>
 								</tr>
-							);
-						})}
-						<tr>
-							<td colSpan="6" style={{ textAlign: "right" }}>
-								Soma Peças:
-							</td>
-							<td>{totalPieces}</td>
-						</tr>
-						<tr>
-							<td colSpan="6" style={{ textAlign: "right" }}>
-								Soma Moldes:
-							</td>
-							<td>{totalMolds}</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+							</thead>
+							<tbody>
+								{data.map((item, index) => {
+									const moldId = item[1];
+									const pieces = getMoldQuantity(moldId) * parseNumber(item[7]);
+									return (
+										<tr key={index}>
+											<td>{item[0]}</td>
+											<td>{item[2]}</td>
+											<td>{item[4]}</td>
+											<td>{parseNumber(item[5])}</td>
+											<td>{parseNumber(item[6])}</td>
+											<td>{parseNumber(item[7])}</td>
+											<td>{pieces}</td>
+										</tr>
+									);
+								})}
+								<tr>
+									<td colSpan="6" style={{ textAlign: "right" }}>
+										Soma Peças:
+									</td>
+									<td>{totalPieces}</td>
+								</tr>
+								<tr>
+									<td colSpan="6" style={{ textAlign: "right" }}>
+										Soma Moldes:
+									</td>
+									<td>{totalMolds}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</>
+			)}
 		</div>
 	);
 }
-
 export default DisaProduction;
