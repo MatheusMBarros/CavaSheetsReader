@@ -15,6 +15,9 @@ function Home() {
 						<li>
 							<Link to="/moldes">Produção por Molde</Link>
 						</li>
+						<li>
+							<Link to="/corteCanal">CorteCanal</Link>
+						</li>
 					</ul>
 				</nav>
 			</div>
