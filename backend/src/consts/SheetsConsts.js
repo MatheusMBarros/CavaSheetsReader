@@ -16,4 +16,11 @@ const PecasInfo = {
   pieceRange: 'AW4:BC80'
 };
 
+const CorteCanal = {
+  shpreadshetId: "1zcFd-8PKyAXtVwCPkqQYHgYKbWgF1LWFD31-Y1k-oDY",
+  sheetName: 'TesteCorteCanal',
+  range: 'A1:J80'
+
+}
+
 module.exports = { DisaConsts, MoldeInfos, PecasInfo};

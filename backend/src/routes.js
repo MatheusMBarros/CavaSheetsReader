@@ -13,7 +13,9 @@ router.get('/pieces', MoldProductionController.piecesSplited);
 router.get('/moldesProduzidos', MoldProductionController.moldProduction);
 router.get('/pieceProduction', PieceProductionController.getPieceProduction); // Nova rota para produção por peça
 router.get('/perdaAl' , AluminumLostController.aluminiumLost)
+
 router.get('/loteInfo/:id', CreatePalletController.getLoteInfo)
+router.get('/createPallet/:id', CreatePalletController.createPallet)
 router.get('/production-by-lote', PieceProductionController.getPieceProductionByLote)
 
 
